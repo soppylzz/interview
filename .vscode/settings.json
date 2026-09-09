@@ -1,0 +1,8 @@
+{
+  "code-runner.runInTerminal": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.executorMap": {
+    "javascript": "node",
+    "typescript": "npx ts-node",
+  }
+}

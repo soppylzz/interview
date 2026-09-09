@@ -1,0 +1,27 @@
+{
+  "name": "leet-code",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run lint:fix && tsc && node ./dist/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "dev:web": "tsc && npx serve src/intern-lab"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.2"
+  },
+  "dependencies": {
+    "serve": "^14.2.6"
+  }
+}
