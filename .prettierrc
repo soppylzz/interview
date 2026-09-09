@@ -1,8 +1,16 @@
 {
-  "semi": true,
-  "singleQuote": true,
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "semi": false,
   "tabWidth": 2,
-  "trailingComma": "es5",
   "printWidth": 100,
-  "arrowParens": "avoid"
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "overrides": [
+    {
+      "files": [".prettierrc", ".releaserc"],
+      "options": {
+        "parser": "json"
+      }
+    }
+  ]
 }

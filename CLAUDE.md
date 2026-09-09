@@ -8,9 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 目录约定
 
-- 每个语言 / 主题对应一个顶层目录，当前只有 `javascript/`，可随时新增（如 `network/`、`browser/` 等）。
-- 顶层目录下的 `code-output/` 存放可运行的编号示例，编号代表知识点的记录顺序。示例见 `javascript/code-output/1.typeof.js`。
-- 说明某个知识点行为的 Markdown 笔记与对应编号的 code-output 示例配套存放。
+- 每个语言 / 主题对应一个顶层目录。现有 `javascript/`（JS 知识点）与 `algorithm/`（算法刷题），可随时新增（如 `network/`、`browser/` 等）。
+- `javascript/codeOutput/` 存放可运行的编号示例，编号代表知识点的记录顺序，对应编号的 Markdown 笔记与之配套存放。示例见 `javascript/codeOutput/1.typeof.js`。
+- `algorithm/hot100/` 存放 Hot 100 题解：按题型分子目录（如 `hash/`、`matrix/`、`pointer/`），每题一个带题号的 `.ts` 文件（如 `hash/1.twoSum.ts`）；尚未解决的题登记在 `UNRESOLVED.md`。
+- `algorithm/structure/` 存放数据结构的 Markdown 笔记（如 `priorityQueue.md`）。
 - `README.md` 作为目录 / 索引使用（当前为空，待建设）。
 
 ## 项目规范
@@ -23,5 +24,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 运行方式
 
 - Node 版本固定为 22（见 `.nvmrc`）。
-- 命令行直接运行单个示例：`node javascript/code-output/1.typeof.js`
-- VSCode 中已配置 Code Runner：对当前 `.js` 执行 `javascript -> node`，在集成终端输出结果。
+- 直接运行单个 JS 示例：`node javascript/codeOutput/1.typeof.js`
+- 运行 `.ts` 题解：`npx ts-node algorithm/hot100/hash/1.twoSum.ts`
+- VSCode 中已配置 Code Runner：对当前 `.js` 执行 `javascript -> node`、对 `.ts` 执行 `typescript -> npx ts-node`，在集成终端输出结果。

@@ -3,6 +3,16 @@
   "code-runner.clearPreviousOutput": true,
   "code-runner.executorMap": {
     "javascript": "node",
-    "typescript": "npx ts-node",
-  }
+    "typescript": "npx ts-node"
+  },
+
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.suggest.autoImports": true,
+  "vscode-edge-devtools.webhint": false,
+
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "prettier.requireConfig": true,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
