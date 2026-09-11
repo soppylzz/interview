@@ -1,29 +1,21 @@
-// need review
 function longestConsecutive(nums: number[]): number {
-  const cache = new Set(nums);
+  const cache = new Set(nums)
 
-  // fix: should consider `[]`
-  let maxLength = 0,
-    currentLength,
-    next,
-    prev;
+  let maxLength = 0
 
-  // fix: should iterate set to avoid unnecessary checks
+  // fix: should iterate set to avoid check duplicate num
   for (const num of cache) {
-    prev = num - 1;
-    // find start num
-    if (!cache.has(prev)) {
-      currentLength = 1;
-      next = num + 1;
+    if (cache.has(num - 1)) continue
 
-      while (cache.has(next)) {
-        next++;
-        currentLength++;
-      }
-
-      maxLength = Math.max(maxLength, currentLength);
+    let next = num + 1,
+      currentLength = 1
+    while (cache.has(next)) {
+      currentLength++
+      next++
     }
+
+    maxLength = Math.max(maxLength, currentLength)
   }
 
-  return maxLength;
+  return maxLength
 }

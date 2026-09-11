@@ -1,94 +1,113 @@
-/* ==================== dual pointer (*) ==================== */
-function trap(height: number[]): number {
+// solution: 1) mono-stack 2) pointer 3) dp
+function trapViaMonoStack(height: number[]): number {
+  // mono stack (decreasing)
+  const stack: number[] = [],
+    n = height.length
+
   let left,
-    right,
-    mid,
-    currentTraped,
-    traped = 0;
+    bottom: number,
+    trapped = 0
 
-  /* =============== trap left =============== */
-  left = 0;
-  right = left + 1;
-  currentTraped = 0;
+  for (let i = 0; i < n; i++) {
+    // if statement is not required
+    // if (stack.length > 0 && height[i] >= height[stack[stack.length - 1]]) {
+    //   // when enter this branch, stack.length >= 1
+    // }
 
-  while (right < height.length) {
-    if (height[right] >= height[left]) {
-      left = right;
-      traped += currentTraped;
-      currentTraped = 0;
-    } else {
-      currentTraped += height[left] - height[right];
+    while (stack.length > 0 && height[i] >= height[stack[stack.length - 1]]) {
+      bottom = stack.pop()!
+
+      if (stack.length > 0) {
+        left = stack[stack.length - 1]
+        trapped += (i - left - 1) * (Math.min(height[i], height[left]) - height[bottom])
+      }
     }
-    right++;
+
+    // tip: maintain index, so we can compute distance quickly
+    stack.push(i)
   }
 
-  mid = left;
+  return trapped
+}
+
+function trapViaPointer(height: number[]): number {
+  let trapped = 0,
+    left,
+    right,
+    currentTrapped,
+    mid
+
+  const n = height.length
+
+  /**
+   * we assume current bound is lowest bound, only meet
+   * real bound we push currentTrapped into trapped,
+   * use slow/fast pointer iter in bi-direction
+   */
+
+  /* =============== trap left =============== */
+  left = 0
+  right = left + 1
+  currentTrapped = 0
+
+  while (right < n) {
+    if (height[left] <= height[right]) {
+      left = right
+      trapped += currentTrapped
+      currentTrapped = 0
+    } else {
+      currentTrapped += height[left] - height[right]
+    }
+    right++
+  }
 
   /* =============== trap right =============== */
-  right = height.length - 1;
-  left = right - 1;
-  currentTraped = 0;
+  mid = left
+  right = n - 1
+  left = right - 1
+  currentTrapped = 0
 
   while (left >= mid) {
     if (height[left] >= height[right]) {
-      right = left;
-      traped += currentTraped;
-      currentTraped = 0;
+      right = left
+      trapped += currentTrapped
+      currentTrapped = 0
     } else {
-      currentTraped += height[right] - height[left];
+      currentTrapped += height[right] - height[left]
     }
-    left--;
+    left--
   }
 
-  return traped;
+  return trapped
 }
 
-/* ==================== monotonic stack ==================== */
-function trapViaMonotonicStack(height: number[]): number {
-  let traped = 0;
-  const stack: number[] = [];
+function trapViaDp(height: number[]): number {
+  const leftMax = [],
+    rightMax = [],
+    n = height.length
 
-  for (let i = 0; i < height.length; i++) {
-    while (stack.length > 0 && height[i] > height[stack[stack.length - 1]]) {
-      const bottom = stack.pop()!;
-      if (stack.length === 0) break;
+  let trapped = 0,
+    maxHeight,
+    bound
 
-      const left = stack[stack.length - 1];
-      const right = i;
-
-      const width = right - left - 1;
-      const depth = Math.min(height[left], height[right]) - height[bottom];
-
-      // note: trap like [6, 3, 4(i)] -> [6, 4, 4]
-      traped += width * depth;
-    }
-
-    stack.push(i);
-  }
-
-  return traped;
-}
-
-/* ==================== dp ==================== */
-function trapViaDP(height: number[]): number {
-  const n = height.length;
-
-  const leftMax: number[] = new Array(n).fill(0);
-  leftMax[0] = height[0];
-  for (let i = 1; i < n; i++) {
-    leftMax[i] = Math.max(leftMax[i - 1], height[i]);
-  }
-
-  const rightMax: number[] = new Array(n).fill(0);
-  rightMax[n - 1] = height[n - 1];
-  for (let i = n - 2; i >= 0; i--) {
-    rightMax[i] = Math.max(rightMax[i + 1], height[i]);
-  }
-
-  let traped = 0;
+  maxHeight = 0
   for (let i = 0; i < n; i++) {
-    traped += Math.min(leftMax[i], rightMax[i]) - height[i];
+    maxHeight = Math.max(maxHeight, height[i])
+    leftMax.push(maxHeight)
   }
 
-  return traped;
+  maxHeight = 0
+  for (let i = 0; i < n; i++) {
+    maxHeight = Math.max(maxHeight, height[n - i - 1])
+    rightMax.push(maxHeight)
+  }
+
+  for (let i = 0; i < n; i++) {
+    bound = Math.min(rightMax[n - i - 1], leftMax[i])
+    if (bound > height[i]) {
+      trapped += bound - height[i]
+    }
+  }
+
+  return trapped
 }

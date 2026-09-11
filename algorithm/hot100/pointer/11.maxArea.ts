@@ -1,22 +1,16 @@
 function maxArea(height: number[]): number {
-  let left = 0,
+  let maxArea = 0,
+    left = 0,
     right = height.length - 1,
-    maxArea = 0;
+    currentArea
 
   while (left < right) {
-    const leftHeight = height[left];
-    const rightHeight = height[right];
+    currentArea = Math.min(height[left], height[right]) * (right - left)
+    maxArea = Math.max(currentArea, maxArea)
 
-    const currentArea = (right - left) * Math.min(leftHeight, rightHeight);
-    maxArea = Math.max(currentArea, maxArea);
-
-    // move min height pointer
-    if (leftHeight > rightHeight) {
-      right--;
-    } else {
-      left++;
-    }
+    if (height[left] > height[right]) right--
+    else left++
   }
 
-  return maxArea;
+  return maxArea
 }

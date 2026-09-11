@@ -1,6 +1,18 @@
 dist/
+
 node_modules/
 
 .DS_Store
+Thumbs.db
 
 *.log
+logs/
+
+.env
+.env.local
+.env.*.local
+
+.cache/
+.eslintcache
+
+jobs
