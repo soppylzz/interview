@@ -21,4 +21,4 @@ Never write Chinese inside code comments.
 
 - Express intent through self-explanatory function/variable names instead of comments; a reader should understand how to call or use something from its name alone.
 - Write a comment only where the code cannot make a constraint obvious by itself.
-- In runnable examples, annotate a statement's expected output with a trailing single-line comment, e.g. `console.log(typeof str1); // string` (see `javascript/codeOutput/1.typeof.js`).
+- In runnable examples, annotate a statement's expected output with a trailing single-line comment, e.g. `console.log(typeof str1); // string`.
