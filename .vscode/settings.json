@@ -8,7 +8,6 @@
 
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.suggest.autoImports": true,
-  "vscode-edge-devtools.webhint": false,
 
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
