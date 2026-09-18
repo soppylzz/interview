@@ -16,7 +16,7 @@ The top level splits into notes / code / practice; new sibling directories may b
 - `algorithm/structure/` — Markdown notes on data structures (e.g. `priorityQueue.md`).
 - `algorithm/special/` — Markdown notes on algorithm topics (e.g. `lru.md`, `manacher.md`).
 - Review progress is tracked in `algorithm/hot100/REVIEW.md`: solved problem numbers logged by day.
-- `README.md` (Chinese) and `README.en.md` (English) are the repository index; keep the two in sync when the layout changes.
+- `README.md` (English) is the repository index; it stays lean, with agent-facing detail living here.
 - `CLAUDE.md` is a pointer that routes agents to this file; all agent guidance lives here.
 
 ## Project Rules
