@@ -27,7 +27,7 @@ One `.ts` file per problem, named with its problem number (e.g. `hash/1.twoSum.t
 
 | Group | Directories |
 | --- | --- |
-| Array · Hash · Matrix | `arrary/` `hash/` `matrix/` |
+| Array · Hash · Matrix | `array/` `hash/` `matrix/` |
 | Two pointers · Sliding window · Substring | `pointer/` `window/` `subString/` |
 | Stack · Heap · Binary search | `stack/` `heap/` `biSearch/` |
 | Linked list · Binary tree | `linked/` `biTree/` (shared node definitions in `listNode.ts` / `treeNode.ts`) |

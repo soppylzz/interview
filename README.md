@@ -27,7 +27,7 @@
 
 | 分组 | 子目录 |
 | --- | --- |
-| 数组 · 哈希 · 矩阵 | `arrary/` `hash/` `matrix/` |
+| 数组 · 哈希 · 矩阵 | `array/` `hash/` `matrix/` |
 | 双指针 · 滑动窗口 · 子串 | `pointer/` `window/` `subString/` |
 | 栈 · 堆 · 二分 | `stack/` `heap/` `biSearch/` |
 | 链表 · 二叉树 | `linked/` `biTree/`（公共节点定义在同目录 `listNode.ts` / `treeNode.ts`） |
