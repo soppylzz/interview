@@ -12,4 +12,4 @@ Comments inside code samples still follow the English rules in `code-style.md`.
 
 ## Exempt files
 
-Machine-facing control files (`CLAUDE.md` and everything under `.claude/`) are exempt and use whichever language best serves their audience.
+Machine-facing control files (`AGENT.md`, the `CLAUDE.md` pointer to it, and everything under `.claude/`) are exempt and use whichever language best serves their audience.
