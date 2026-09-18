@@ -3,7 +3,7 @@
   "code-runner.clearPreviousOutput": true,
   "code-runner.executorMap": {
     "javascript": "node",
-    "typescript": "npx ts-node"
+    "typescript": "node"
   },
 
   "js/ts.tsdk.path": "node_modules/typescript/lib",

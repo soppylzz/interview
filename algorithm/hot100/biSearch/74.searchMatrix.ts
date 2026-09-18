@@ -21,3 +21,6 @@ function searchMatrix(matrix: number[][], target: number): boolean {
 
   return false
 }
+
+// module scope: same-name solutions in other files must not collide
+export {}

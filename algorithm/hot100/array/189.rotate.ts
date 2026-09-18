@@ -35,3 +35,6 @@ function rotateViaFlip(nums: number[], k: number) {
 }
 
 // cycle way
+
+// module scope: same-name solutions in other files must not collide
+export {}

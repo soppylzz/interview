@@ -25,20 +25,20 @@
 
 每题一个带题号的 `.ts` 文件（如 `hash/1.twoSum.ts`），同一题的多种解法写在同一个文件里，困难 / 专题变体以 `.hard.ts` / `.special.ts` 后缀独立成文件。按题型分目录：
 
-| 分组 | 子目录 |
-| --- | --- |
-| 数组 · 哈希 · 矩阵 | `array/` `hash/` `matrix/` |
-| 双指针 · 滑动窗口 · 子串 | `pointer/` `window/` `subString/` |
-| 栈 · 堆 · 二分 | `stack/` `heap/` `biSearch/` |
-| 链表 · 二叉树 | `linked/` `biTree/`（公共节点定义在同目录 `listNode.ts` / `treeNode.ts`） |
-| 图 · 回溯 · 贪心 · 动态规划 · 杂项 | `graph/` `backtrack/` `greedy/` `dp/` `dpPro/` `misc/` |
+| 分组                               | 子目录                                                                    |
+| ---------------------------------- | ------------------------------------------------------------------------- |
+| 数组 · 哈希 · 矩阵                 | `array/` `hash/` `matrix/`                                                |
+| 双指针 · 滑动窗口 · 子串           | `pointer/` `window/` `subString/`                                         |
+| 栈 · 堆 · 二分                     | `stack/` `heap/` `biSearch/`                                              |
+| 链表 · 二叉树                      | `linked/` `biTree/`（公共节点定义在同目录 `listNode.ts` / `treeNode.ts`） |
+| 图 · 回溯 · 贪心 · 动态规划 · 杂项 | `graph/` `backtrack/` `greedy/` `dp/` `dpPro/` `misc/`                    |
 
 复习进度在 `algorithm/hot100/REVIEW.md` 按天登记已过题的题号。
 
 ## 运行方式
 
 - Node 版本固定为 22（见 `.nvmrc`）。
-- 运行 `.ts` 题解：`npx ts-node algorithm/hot100/hash/1.twoSum.ts`
+- 运行 `.ts` 题解：`node algorithm/hot100/hash/1.twoSum.ts`
 - 运行 JS 示例：`node code/javascript/<示例文件>.js`
 - 代码检查 / 格式化：`npm run lint` / `npm run format`
 

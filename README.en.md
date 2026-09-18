@@ -25,20 +25,20 @@ A personal knowledge base for interview preparation: knowledge points organized 
 
 One `.ts` file per problem, named with its problem number (e.g. `hash/1.twoSum.ts`). Multiple approaches to one problem share the same file; hard and special variants get separate `.hard.ts` / `.special.ts` files. Grouped by problem type:
 
-| Group | Directories |
-| --- | --- |
-| Array · Hash · Matrix | `array/` `hash/` `matrix/` |
-| Two pointers · Sliding window · Substring | `pointer/` `window/` `subString/` |
-| Stack · Heap · Binary search | `stack/` `heap/` `biSearch/` |
-| Linked list · Binary tree | `linked/` `biTree/` (shared node definitions in `listNode.ts` / `treeNode.ts`) |
-| Graph · Backtracking · Greedy · DP · Misc | `graph/` `backtrack/` `greedy/` `dp/` `dpPro/` `misc/` |
+| Group                                     | Directories                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------ |
+| Array · Hash · Matrix                     | `array/` `hash/` `matrix/`                                                     |
+| Two pointers · Sliding window · Substring | `pointer/` `window/` `subString/`                                              |
+| Stack · Heap · Binary search              | `stack/` `heap/` `biSearch/`                                                   |
+| Linked list · Binary tree                 | `linked/` `biTree/` (shared node definitions in `listNode.ts` / `treeNode.ts`) |
+| Graph · Backtracking · Greedy · DP · Misc | `graph/` `backtrack/` `greedy/` `dp/` `dpPro/` `misc/`                         |
 
 Review progress is logged by day in `algorithm/hot100/REVIEW.md`.
 
 ## Running
 
 - Node is pinned to 22 (see `.nvmrc`).
-- Run a `.ts` solution: `npx ts-node algorithm/hot100/hash/1.twoSum.ts`
+- Run a `.ts` solution: `node algorithm/hot100/hash/1.twoSum.ts`
 - Run a JS example: `node code/javascript/<file>.js`
 - Lint and format: `npm run lint` / `npm run format`
 
