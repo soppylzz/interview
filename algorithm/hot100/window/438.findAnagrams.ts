@@ -4,7 +4,7 @@ function findAnagrams(s: string, p: string): number[] {
   const result: number[] = []
   if (p.length > s.length) return result
 
-  // note: use matches + diff to avoid compare each window sliding
+  // note: track matches + diff to avoid comparing the whole window on each slide
   const diff = Array(26).fill(0)
   for (let i = 0; i < p.length; i++) {
     diff[p.charCodeAt(i) - aCode]++

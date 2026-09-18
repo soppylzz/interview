@@ -1,5 +1,5 @@
 function majorityElement(nums: number[]): number {
-  // boyer-moore
+  // Boyer-Moore voting
   let major = nums[0]
   let count = 1
 

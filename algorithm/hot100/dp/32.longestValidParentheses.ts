@@ -1,7 +1,7 @@
 // solution: 1) stack 2) dp
 function longestValidParentheses(s: string): number {
   /**
-   * special case:
+   * special cases:
    * 1. ()(()
    * 2. ()(())
    */

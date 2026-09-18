@@ -3,7 +3,7 @@ import { ListNode } from "./listNode"
 /**
  * solution:
  * 1. priority queue
- * 2. using concept of merge sorting
+ * 2. merge sort concept (pairwise merging)
  */
 function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
   const preHead = new ListNode(0)
@@ -33,7 +33,7 @@ function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
       if (left < heapLength && heap[child].val > heap[left].val) {
         child = left
       }
-      // tip: should compare right with left
+      // tip: compare the right child against the current child (smaller of cur/left)
       if (right < heapLength && heap[child].val > heap[right].val) {
         child = right
       }

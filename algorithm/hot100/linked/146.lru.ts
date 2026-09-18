@@ -15,7 +15,7 @@ class LRUCache {
   private capacity: number
   private map: Map<number, Node_>
 
-  // bi-direction linked + empty head / tail
+  // doubly linked list + dummy head / tail
   private head: Node_
   private tail: Node_
 
@@ -30,11 +30,11 @@ class LRUCache {
   }
 
   /**
-   * private method:
+   * private helpers:
    * - addToHead
    * - removeNode
    * - moveToHead
-   * - removeTail (for deleting lru end)
+   * - removeTail (evicts the LRU end)
    */
 
   private addToHead(node: Node_) {

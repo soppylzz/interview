@@ -1,4 +1,4 @@
-// dfs?! what
+// dfs flood fill: sink each island
 function numIslands(grid: string[][]): number {
   let count = 0
   const m = grid.length

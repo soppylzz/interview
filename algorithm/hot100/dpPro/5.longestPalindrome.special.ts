@@ -1,11 +1,11 @@
 /**
- * note: we should consider situation below:
+ * cases to consider:
  * 1. aba
  * 2. aa
  * 3. aaa
  * 4. abaaaa
- * can not use single dimension dp to resolve this problem
- * if we insert "|" like manacher (O(n))
+ * a single-dimension dp cannot solve this problem;
+ * inserting "|" separators like manacher does gives an O(n) solution
  */
 function longestPalindromeViaDp(s: string): string {
   // note: dp[i][j] means s[i...j] is a palindrome
@@ -74,13 +74,13 @@ function longestPalindrome(s: string): string {
       radius[i]++
     }
 
-    // if expand beyond right, update center, right
+    // if the expansion goes beyond right, update center and right
     if (i + radius[i] > right) {
       center = i
       right = i + radius[i]
     }
 
-    // record maxLength
+    // track the max radius (= max palindrome length)
     if (radius[i] > maxRight) {
       maxRight = radius[i]
       maxCenter = i

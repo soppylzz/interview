@@ -1,6 +1,6 @@
 import { TreeNode } from "./treeNode"
 
-// more solution?
+// more solutions?
 function levelOrder(root: TreeNode | null): number[][] {
   if (root === null) return []
 

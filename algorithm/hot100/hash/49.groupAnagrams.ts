@@ -8,7 +8,7 @@ function generateKey(str: string) {
 }
 
 /**
- * also could use prime numbers prod to generate unique key
+ * alternative: use the product of per-letter primes to generate a unique key
  * const primes = [
  *   2n, 3n, 5n, 7n, 11n, 13n, 17n, 19n, 23n, 29n,
  *   31n, 37n, 41n, 43n, 47n, 53n, 59n, 61n, 67n, 71n,
@@ -16,8 +16,8 @@ function generateKey(str: string) {
  * ];
  */
 function groupAnagrams(strs: string[]): string[][] {
-  // tip: hash, generate key via word
-  // ai advise: prime numbers multiple
+  // tip: hash by a key derived from each word's letter counts
+  // ai suggestion: multiply per-letter primes into one product
   const result = new Map<string, string[]>()
 
   for (let i = 0; i < strs.length; i++) {

@@ -1,7 +1,7 @@
 function maxProduct(nums: number[]): number {
   const n = nums.length
 
-  // light: maintain two dp array
+  // light: maintain two dp arrays
   const dpMax = Array(n)
   const dpMin = Array(n)
 

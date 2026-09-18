@@ -1,4 +1,4 @@
-// solution: 1) hash O(n) 2) knot-way
+// solution: 1) hash O(n) 2) knot-way (interleave copies into the list, implemented below)
 class _Node {
   val: number
   next: _Node | null

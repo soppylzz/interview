@@ -15,7 +15,7 @@ function moveZeroesSimple(nums: number[]): void {
   }
 }
 
-// slow-fast pointer solution
+// slow/fast pointer solution
 function moveZeroes(nums: number[]): void {
   let slow = 0,
     fast = 0

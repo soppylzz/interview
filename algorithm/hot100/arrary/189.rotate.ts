@@ -1,6 +1,6 @@
 // normal way
 function rotate(nums: number[], k: number): void {
-  // fix: nums.length > k
+  // fix: handle k >= nums.length
   k = k % nums.length
 
   const temp = Array(k)
@@ -16,7 +16,7 @@ function flip(nums: number[], start: number, end: number) {
     nums[start] = nums[end]
     nums[end] = temp
 
-    // or slower way, but not use temp
+    // alternative swap without a temp variable (slower)
     // nums[start] = nums[end] + nums[start]
     // nums[end] = nums[start] - nums[end]
     // nums[start] = nums[start] - nums[end]

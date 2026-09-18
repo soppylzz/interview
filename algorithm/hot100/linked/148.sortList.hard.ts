@@ -2,8 +2,8 @@ import { ListNode } from "./listNode"
 
 /**
  * merge sort:
- * - recursion (log(n) stack) 2)
- * - iteration (for 1,2,4,8...)
+ * 1) recursion (O(log n) stack)
+ * 2) iteration (sublist sizes 1, 2, 4, 8...; implemented below)
  * just memorize it
  */
 function sortList(head: ListNode | null): ListNode | null {
@@ -60,7 +60,7 @@ function sortListViaRecursion(head: ListNode | null): ListNode | null {
 
   const mid = getMiddle(head)
   const rightHead = mid.next
-  // ensure getMiddle end before mid
+  // ensure getMiddle stops before mid
   mid.next = null
 
   const left = sortListViaRecursion(head)

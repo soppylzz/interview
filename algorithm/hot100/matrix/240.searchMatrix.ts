@@ -5,7 +5,7 @@ function searchMatrix(matrix: number[][], target: number): boolean {
   let row = 0,
     col = n - 1
 
-  // light: bi-search tree
+  // light: treat the matrix as a binary search tree rooted at the top-right
   while (row < m && col >= 0) {
     const cur = matrix[row][col]
 

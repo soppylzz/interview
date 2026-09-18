@@ -1,7 +1,7 @@
 function searchRange(nums: number[], target: number): number[] {
   /**
-   * note: bi-search + start/end search -> the most worst is O(n)
-   * we should use bi-search to replace left/right
+   * Note: binary search for one occurrence, then binary search the range start/end.
+   * Naive left/right expansion is O(n) worst case, so binary search the boundaries instead.
    */
 
   let left = 0,
@@ -21,7 +21,7 @@ function searchRange(nums: number[], target: number): number[] {
     }
   }
 
-  // not founded
+  // target not found
   if (nums[mid] !== target) return [-1, -1]
 
   // find range start

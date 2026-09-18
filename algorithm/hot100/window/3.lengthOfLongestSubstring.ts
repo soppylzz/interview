@@ -2,7 +2,7 @@
 function lengthOfLongestSubstring(s: string): number {
   if (s.length === 0) return 0;
 
-  // note: can not use bit number to represent state
+  // note: cannot use a bitmask to represent the state
   const map = new Map<string, number>();
 
   let left = 0,
@@ -12,7 +12,7 @@ function lengthOfLongestSubstring(s: string): number {
   while (right < s.length) {
     const char = s[right];
     if (map.has(char)) {
-      // light: no need to delete cache outside string range
+      // light: no need to delete cached entries outside the current window
       left = Math.max(left, map.get(char)! + 1);
     }
     map.set(char, right);

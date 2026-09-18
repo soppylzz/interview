@@ -1,6 +1,6 @@
 import { ListNode } from "./listNode"
 
-// floyd circle algorithm
+// Floyd's cycle detection algorithm
 function detectCycle(head: ListNode | null): ListNode | null {
   if (head === null) return null
 
@@ -18,7 +18,7 @@ function detectCycle(head: ListNode | null): ListNode | null {
     if (slow === fast) break
   }
 
-  // reset slow
+  // reset slow to head
   slow = head
 
   while (slow !== fast) {

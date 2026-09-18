@@ -1,4 +1,4 @@
-// use divide
+// with division
 function productExceptSelfViaDivide(nums: number[]): number[] {
   let zeroIndexs = []
   let productExceptZero = 1
@@ -22,7 +22,7 @@ function productExceptSelfViaDivide(nums: number[]): number[] {
   return result
 }
 
-// not use divide
+// without division
 function productExceptSelf(nums: number[]): number[] {
   const preProd = [1]
   const sufProd = [1]

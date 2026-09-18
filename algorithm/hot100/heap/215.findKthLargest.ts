@@ -2,7 +2,7 @@ function findKthLargest(nums: number[], k: number): number {
   const heap: number[] = []
   heap[0] = nums[0]
 
-  // build max heap
+  // build a max heap
   for (let i = 1; i < nums.length; i++) {
     const num = nums[i]
 
@@ -10,14 +10,14 @@ function findKthLargest(nums: number[], k: number): number {
     let cur = heap.length - 1
 
     while (cur > 0 && heap[cur] > heap[(cur - 1) >> 1]) {
-      // note: parent-child relationship
+      // note: parent-child index relationship
       const parent = (cur - 1) >> 1
       ;[heap[cur], heap[parent]] = [heap[parent], heap[cur]]
       cur = parent
     }
   }
 
-  // do heap sort
+  // heap sort
   let heapLength = heap.length
 
   while (heapLength > nums.length - k) {

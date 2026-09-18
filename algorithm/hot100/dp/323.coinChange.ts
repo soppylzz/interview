@@ -1,6 +1,6 @@
 // classic unbounded knapsack problem
 function coinChange(coins: number[], amount: number): number {
-  // dp[i] = min(dp[i-coins[k]] + 1), use Infinity to represet cant change
+  // dp[i] = min(dp[i-coins[k]] + 1); use Infinity to mark amounts that cannot be changed
 
   const dp = Array(amount + 1).fill(Infinity)
 

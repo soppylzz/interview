@@ -1,5 +1,5 @@
 function uniquePaths(m: number, n: number): number {
-  // fix: can not use `fill(Array(n))`, because it pass reference here
+  // fix: cannot use `fill(Array(n))`, because it passes the same array reference to every row
   const dp = Array(m)
   for (let i = 0; i < m; i++) {
     dp[i] = Array(n)

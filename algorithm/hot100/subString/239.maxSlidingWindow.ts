@@ -2,13 +2,13 @@ function maxSlidingWindow(nums: number[], k: number): number[] {
   const result: number[] = []
   const deque: number[] = []
 
-  // perf: use a head pointer to implicitly manage the deque window (`let head = 0`)
+  // perf: could use a head pointer to implicitly manage the deque window (e.g. `let head = 0`)
 
   for (let i = 0; i < nums.length; i++) {
     /**
-     * light: use if statement is sufficient, because window
-     * only scrolls 1, at most one element expire. we already
-     * clear previous value when deque[0] is inserting.
+     * light: an if statement suffices because the window only slides
+     * by 1, so at most one element expires per step. stale smaller
+     * values are already cleared when a new element is inserted.
      */
     if (deque.length > 0 && deque[0] < i - k + 1) deque.shift()
     while (deque.length > 0 && nums[deque[deque.length - 1]] < nums[i]) deque.pop()
@@ -27,7 +27,7 @@ function maxSlidingWindow(nums: number[], k: number): number[] {
 class PriorityQueue<Value> {
   private heap: Array<{ score: number; value: Value }> = []
 
-  // default: max heap, big score has more priority
+  // default: max heap, larger score means higher priority
   constructor(private compare: (a: number, b: number) => number = (a, b) => a - b) {}
 
   private swap(aIdx: number, bIdx: number) {

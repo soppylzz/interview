@@ -35,7 +35,7 @@ function setZeroes(matrix: number[][]): void {
     }
   }
 
-  // fix: ignore first col/row interference
+  // skip first row/col to avoid interference
   for (let i = 1; i < matrix.length; i++) {
     for (let j = 1; j < matrix[0].length; j++) {
       if (matrix[i][j] === 0) {
@@ -45,7 +45,7 @@ function setZeroes(matrix: number[][]): void {
     }
   }
 
-  // fix: ignore first col/row interference
+  // skip first row/col to avoid interference
   for (let i = 1; i < matrix.length; i++) {
     for (let j = 1; j < matrix[0].length; j++) {
       if (matrix[i][0] === 0 || matrix[0][j] === 0) matrix[i][j] = 0

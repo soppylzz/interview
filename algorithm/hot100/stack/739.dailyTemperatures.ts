@@ -1,5 +1,5 @@
 function dailyTemperatures(temperatures: number[]): number[] {
-  // mono stack
+  // monotonic stack
   const stack: number[] = []
   const res = Array(temperatures.length).fill(0)
 

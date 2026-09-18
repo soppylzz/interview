@@ -1,8 +1,8 @@
 // solution: 1) unbounded knapsack 2) bfs
 function numSquares(n: number): number {
   /**
-   * think: greedy with sqrt(n) fails (e.g., 12 = 4+4+4, not 9+1+1+1).
-   * is this a knapsack problem, use sqrt(num) as the item bound?
+   * think: greedy (largest square first) fails, e.g. 12 = 4+4+4, not 9+1+1+1.
+   * this is a knapsack problem: squares up to sqrt(i) are the items.
    */
   let minCap = Infinity,
     currentCap

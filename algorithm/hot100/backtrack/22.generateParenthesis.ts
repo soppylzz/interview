@@ -1,7 +1,7 @@
 function generateParenthesis(n: number): string[] {
   /**
-   * consider ()?, ?(), (?) - [X]
-   * tip: discuss “(”, “)” separately
+   * consider inserting "()" as ()?, ?() or (?) - [X]
+   * tip: handle "(" and ")" separately
    */
   const result: string[] = []
   const temp: string[] = []
@@ -16,7 +16,7 @@ function generateParenthesis(n: number): string[] {
         temp.pop()
       }
 
-      // fix: should avoid add illegal ")"
+      // fix: avoid adding an illegal ")"
       if (right < left) {
         temp.push(")")
         generate(left, right + 1)

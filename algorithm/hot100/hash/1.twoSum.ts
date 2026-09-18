@@ -1,6 +1,6 @@
 function twoSum(nums: number[], target: number): number[] {
-  // 1. sort nums -> two pointer iterate => O(nlogn)
-  // 2. cached finding => O(n)
+  // 1. sort + two pointers => O(nlogn)
+  // 2. hash map complement lookup => O(n) (implemented below)
   const adds = new Map<number, number>();
 
   for (let i = 0; i < nums.length; i++) {

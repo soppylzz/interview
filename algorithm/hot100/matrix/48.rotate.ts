@@ -1,14 +1,14 @@
 function rotate(matrix: number[][]): void {
   const n = matrix.length
 
-  // apply T
+  // transpose
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
       ;[matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]]
     }
   }
 
-  // apply flip-y
+  // flip along the y-axis
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n >> 1; j++) {
       ;[matrix[i][j], matrix[i][n - 1 - j]] = [matrix[i][n - 1 - j], matrix[i][j]]

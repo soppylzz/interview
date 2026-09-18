@@ -3,7 +3,7 @@ function longestConsecutive(nums: number[]): number {
 
   let maxLength = 0
 
-  // fix: should iterate set to avoid check duplicate num
+  // fix: iterate the set instead of nums to avoid re-processing duplicates
   for (const num of cache) {
     if (cache.has(num - 1)) continue
 

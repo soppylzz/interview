@@ -17,7 +17,7 @@ function buildTree(preorder: number[], inorder: number[]): TreeNode | null {
 
     const inorderSep = cache.get(tree.val)!
 
-    // light: we don't need find preorderSep manually
+    // light: no need to find preorderSep manually
     const leftSize = inorderSep - inStart
     const preorderSep = preStart + 1 + leftSize
 

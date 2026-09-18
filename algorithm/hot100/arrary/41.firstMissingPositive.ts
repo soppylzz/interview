@@ -16,7 +16,7 @@ function firstMissingPositiveEquivalent(nums: number[]): number {
   return findIdx + 1
 }
 
-// two solution: 1. 10^4 hash; 2. in-place hash
+// two solutions: 1. 10^4 hash; 2. in-place hash
 function firstMissingPositiveInPlace(nums: number[]): number {
   const n = nums.length
 

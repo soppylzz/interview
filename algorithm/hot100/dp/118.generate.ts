@@ -7,7 +7,7 @@ function generate(numRows: number): number[][] {
 
   for (let i = 1; i < numRows; i++) {
     const curRow = [1]
-    // note: row i has i+1 elements. we loop up to i-1 to exclude last element
+    // note: row i has i+1 elements; j stops at i-1 to exclude the last element
     for (let j = 1; j < i; j++) curRow[j] = prevRow[j - 1] + prevRow[j]
     curRow.push(1)
     prevRow = curRow

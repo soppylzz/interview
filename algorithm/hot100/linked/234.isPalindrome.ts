@@ -31,7 +31,7 @@ function reverseListSimplified(head: ListNode | null): ListNode | null {
 function isPalindrome(head: ListNode | null): boolean {
   if (head === null || head.next === null) return true
 
-  // light: use slow/fast pointer to find center
+  // tip: use slow/fast pointers to find the center
   let slow = head,
     fast = head
 

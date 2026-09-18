@@ -1,6 +1,6 @@
 import { TreeNode } from "./treeNode"
 
-// solution: 1) LRT-traverse 2) complete binary tree
+// solution: 1) LRT traversal 2) complete binary tree
 function rightSideView(root: TreeNode | null): number[] {
   const result: number[] = []
 

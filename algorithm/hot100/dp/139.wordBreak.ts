@@ -1,8 +1,8 @@
 // classic unbounded knapsack problem
 function wordBreak(s: string, wordDict: string[]): boolean {
   /**
-   * dp[i] represents the minimum number of words needed to compose
-   * the first i characters of the composite word string `cap`.
+   * dp[i]: whether the first i characters of the composite string `cap`
+   * can be composed from dictionary words.
    * note: `cap` here is a string (composite word), not a numeric capacity.
    */
   const dp = Array(s.length + 1).fill(false)
