@@ -7,8 +7,9 @@ Personal interview-prep knowledge base: Chinese study notes paired with runnable
 ## Layout
 
 ```text
-├── docs/           # study notes: browser/ css/ network/, interview questions by date, advice
-├── code/           # runnable examples (javascript / typescript)
+├── docs/           # study notes grouped by frontend topic
+├── questions/      # interview questions recorded by date
+├── handwrite/      # handwritten implementation practice and type challenges
 └── algorithm/
     ├── hot100/     # Hot 100 solutions: one .ts per problem (e.g. hash/1.twoSum.ts), progress in REVIEW.md
     ├── structure/  # data-structure notes

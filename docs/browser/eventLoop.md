@@ -1,119 +1,99 @@
-# Event Loop
+# Browser Event Loop
 
-> W3C -> `event loop`
->
-> Chromium -> `base/message_loop`
+事件循环是 HTML Standard 定义的调度模型；Chromium 的进程、线程和内部队列是其中一种实现，不应当作所有浏览器的规范结构。
 
-## 1. Process & Thread
+## 1. 进程与线程
 
-1. 一个进程在启动时自动创建线程来运行代码，这个线程为主线程（与进程生命周期相同）
-2. 浏览器是一个**多进程**、多线程的应用程序
-   > 为了避免相互影响，减少连环崩溃的几率，启动浏览器后，它会自动启动多个进程
+进程拥有相对独立的地址空间和系统资源，线程共享所属进程的内存。多进程能提高故障隔离、安全隔离和并行能力，代价是更多内存及 IPC 开销。
 
-## 2. Browser Process
+Chromium 常见进程包括：
 
-> 标签页渲染进程 + 浏览器进程
+| 进程 | 主要职责 |
+| --- | --- |
+| Browser Process | 浏览器 UI、导航协调、权限、输入路由和子进程管理 |
+| Network Service | DNS、连接、HTTP、缓存等网络工作 |
+| Renderer Process | 解析页面、执行页面脚本、样式布局和绘制 |
+| GPU/Viz Process | 光栅化、跨页面合成及向系统提交画面 |
 
-- 浏览器进程：浏览器交互页面展示、**用户交互**、子进程管理等
-- 网络进程：辅助加载网络资源，内部会启动多个线程来处理不同网络任务
-- **渲染进程**：
-  > 开启**渲染主线程**，负责执行 HTML、CSS、JS
-  > 默认情况下，浏览器会为每个标签页开启一个新的渲染进程，保证标签页间互不影响
-  >
-  > 进程创建：process-per-tab / process-per-site
+Chrome 会依据 Site Isolation、站点关系、iframe 和资源限制分配 Renderer Process。一个标签页可能涉及多个渲染进程，多个同站页面也可能复用进程，因此不能概括为“一标签页一个进程”。
 
-## 3. Render Thread
+## 2. 渲染主线程
 
-> 最繁忙的线程，JS 单线程的原因
+一个 Renderer Process 通常只有一条渲染主线程，负责页面 JavaScript、DOM 事件、HTML/CSS 解析，以及大量样式、布局和绘制工作。Web Worker 可在其他线程执行脚本，但不能直接操作当前页面 DOM。
 
-主要任务包括但不限于：
+JavaScript 与 DOM 更新集中在同一主线程，使脚本执行与页面结构修改保持确定顺序。代价是长时间脚本会同时延迟输入处理、计时器和渲染。
 
-- 解析 HTML、CSS
-- 计算样式 (样式冲突、100%、rem、em计算等)、布局
-- 处理图层 (z-index)
-- 60 frame per second (render)
-- **执行 JS**
-- 执行事件处理函数
-- 执行计时器回调函数
+浏览器并非“无论如何都不能阻塞”：同步循环、布局计算和事件回调都可能阻塞主线程。异步 API 只把等待或部分工作交给宿主，回调最终在主线程执行时仍可能形成 Long Task。
 
-> 为什么渲染进程不使用多个线程来处理这些事件？
+## 3. Task 与 Microtask
 
-如何调度任务：
+HTML 事件循环维护多个 task queue。计时器、用户交互、网络事件等任务来自不同 task source；浏览器按规范约束和自身调度策略选择可运行任务。代码不能依赖某类普通 task 永远优先于另一类。
 
-- 执行 JS 过程中，触发按键事件 / 计时器事件 —— 如何执行这些回调函数？
-- 如何处理点击事件与计时器事件同时触发？
+一次简化的循环过程：
 
-浏览器的解决方案是：**排队** (事件 /。消息队列)
+1. 选择并执行一个 task，直到调用栈清空。
+2. 执行 microtask checkpoint，持续清空 microtask queue。
+3. 到达合适时机时执行渲染更新，包括 `requestAnimationFrame` 回调、样式、布局与绘制。
+4. 继续选择下一个 task，或在没有工作时等待。
 
-1. 最开始进入 `for(;;)`
-2. 每次循环检查消息队列是否有任务存在：1. 存在取出任务执行，执行完后进入下一次循环；2. 没有则进入休眠状态
-3. 其他线程可以随时向消息队列添加任务。添加新任务是，如果主线程处于休眠状态，则会唤醒并继续执行循环拿取任务
+常见 microtask 来源：
 
-## 4. Async
+- `Promise.then/catch/finally`
+- `queueMicrotask()`
+- `MutationObserver` 通知
 
-代码在执行过程中，会遇到一些无法立即处理的任务：
-
-- 计时器回调：`setTimeout`、`setInterval`
-- 网路响应回调：`fetch`、`XHR`
-- 事件回调：`addEventListener`
-
-采用同步处理会阻塞主线程，而**渲染线程承担极其重要的工作，无论如何都不能阻塞**，因此采用异步来解决上述问题：
-
-- 计时器：`setTimeout` -> 计时线程 -> 计时结束后，将回掉函数放置消息队列末尾（回掉函数包装为任务）
+`Promise.resolve()` 只创建已兑现 Promise，不会单独排入回调；需要调用 `.then()`。
 
 ```js
-var h1 = document.querySelector("h1")
-var btn = document.querySelector("btn")
+console.log('sync')
 
-function delay(duration) {
+setTimeout(() => console.log('timer'), 0)
+queueMicrotask(() => console.log('microtask'))
+Promise.resolve().then(() => console.log('promise'))
+
+// sync -> microtask -> promise -> timer
+```
+
+每个 microtask 还可以继续添加 microtask，因此递归调度可能让浏览器迟迟无法进入渲染和下一个 task，形成 microtask starvation。
+
+## 4. 异步任务如何返回
+
+计时器到期、网络数据可用或输入发生后，宿主会把相应任务变为可运行状态。主线程必须先完成当前 task 和随后的 microtask checkpoint，才可能执行它。
+
+```js
+const heading = document.querySelector('h1')
+const button = document.querySelector('button')
+
+function block(duration) {
   const start = performance.now()
   while (performance.now() - start < duration) {}
 }
 
-btn.onClick = function () {
-  // repaint: add repaint task into message queue
-  h1.textContent = "changed"
-
-  // this statement will block the modification of h1
-  delay(3000)
-}
+button.addEventListener('click', () => {
+  heading.textContent = 'changed'
+  block(3000)
+})
 ```
 
-## 5. Priority
+DOM 已经修改，但浏览器通常要等当前 callback 和 microtask 执行完，获得渲染机会后才把新内容呈现在屏幕上，所以用户会在约 3 秒后看到变化。
 
-消息队列内的任务没有优先级，但**消息队列有优先级**
+## 5. 渲染时机
 
-> origin：宏任务、微任务
+渲染不是每轮事件循环必然发生，也不保证固定 60 FPS。浏览器会结合显示器刷新率、页面可见性、是否需要更新及性能情况选择渲染机会。
 
-现有解释（2024）：
+微任务通常发生在当前 task 之后、渲染机会之前。`requestAnimationFrame` 用于在下一次预计绘制前更新视觉状态；它不是 microtask，也不等价于 `setTimeout(fn, 16)`。
 
-- 每个任务都有一个任务类型，同一个类型的任务必须在一个队列中，不同类型的任务可以分属于不同的队列。一次事件循环中，浏览器可以根据实际的情况从不同对立中取任务执行
+## 6. setTimeout 为什么不精确
 
-- 浏览器必须准备一个微队列<sup>VIP</sup>，微队列的任务优先级**优先于**所有其他任务执行
+`setTimeout(fn, delay)` 表示经过至少 delay 后，回调才有资格排队，不承诺该时刻立即执行。偏差来自：
 
-chromium 的队列：
+1. 当前 task、microtask 或其他任务占用主线程。
+2. 嵌套计时器达到规范规定的 nesting level 后，小于 4ms 的延迟会被钳制到至少 4ms。
+3. 后台页面的计时器会被节流，浏览器还可能批处理任务。
+4. 操作系统调度、设备负载和省电策略带来额外延迟。
 
-- 延时队列<sup>(中)</sup>：计时器回调任务
-- 交互队列<sup>(高)</sup>：用户操作任务
-- **微队列**<sup>(最高)</sup>：用户存放需要最快执行的任务
+因此动画使用 `requestAnimationFrame`，精确耗时使用 `performance.now()` 计算实际时间；倒计时应根据目标时间校正，而不是假设每次 interval 都准时。
 
-添加微队列的方式有：
+## 7. 面试回答框架
 
-- `Promise.resolve()`
-- `MutationObserver`
-
-## 6. Interview
-
-### 事件循环原理
-
-### JS 计时器能做到精准计时吗
-
-1. 操作系统的计时函数本身存在少量偏差
-
-2. `setTimeout` 嵌套超过 5 层，就会有 4ms 误差
-
-   ```cpp
-   constexpr int kMaxTimerNestingLevel = 5
-   ```
-
-3. 受事件循环的影响，计时器的回调函数只能在主线程空闲时运行，因此带来了偏差
+回答执行顺序题时依次写出：同步调用栈、当前 task 产生的 microtask、microtask checkpoint、可能的渲染机会、后续 task。若涉及 `requestAnimationFrame`、后台节流或不同 task source，应说明规范允许调度差异，不给出超出保证范围的唯一顺序。

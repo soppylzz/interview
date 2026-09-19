@@ -1,143 +1,97 @@
 # Browser Rendering
 
-渲染流水线：解析HTML -> 样式计算 -> 布局 -> 分层 -> 绘制 -> 分块 -> 光栅化 -> 画
+以 Chromium 为例，主流程可以概括为：
 
-## Parse
+```text
+HTML/CSS parse → style → layout → pre-paint → paint → layerize → tile → raster → composite → display
+```
 
-解析 HTML
+这是理解模型，不是每次更新都完整执行。滚动或已合成动画可能只需重新合成；不同浏览器的内部阶段和线程划分也不完全相同。
 
-渲染第一步是解析 HTML。遇到 CSS 解析 CSS，遇到 JS 执行 JS。为了提升解析效率，浏览器在开始解析前，会启动一个预解析线程，率先下载 HTML 外部的 CSS 文件与 JS 文件。
+## 1. Parse
 
-如果主线程解析到 `<link>` 位置，此时外部 CSS 文件还没有下载解析好，**主线程不会等待**，继续解析后续的 HTML。
+HTML parser 把字节解码后的字符流转换为 token，并按 HTML 纠错规则构建 DOM。CSS parser 为已加载的样式表构建 CSSOM。
 
-![解析CSSOM](./assets/parse-css.excalidraw.png)
+预加载扫描器会在主 parser 被阻塞等情况下向前扫描可发现的 URL，尽早请求 CSS、JavaScript、字体和图片。它与主解析并行协作，并不是“解析开始前先完成全部预解析”。
 
-如果解析到 `<script>` 位置，会停止解析 HTML，转而等待 JS 文件下载好，并将全局代码解析执行完成后，才会继续解析 HTML。
+![解析 CSSOM](./assets/parse-css.excalidraw.png)
 
-> 这是因为 JS 代码的执行过程中，可能会修改当前 DOM 树，所有 DOM 树的生成必须停止。这也是 JS 会阻塞 HTML 解析的根本原因。
+外部样式表通常不阻塞 HTML parser 继续构建 DOM，但会阻塞首次渲染。经典脚本若可能依赖前面的样式表，其执行还会等待这些样式加载完成。
 
-![解析JS](./assets/parse-js.excalidraw.png)
+没有 `async/defer` 的外部经典脚本会暂停 HTML 解析，等待下载并立即执行，因为脚本可能通过 `document.write` 或 DOM API 改变正在构建的文档。
 
-### 设置 CSS 样式的方法
+![解析 JavaScript](./assets/parse-js.excalidraw.png)
 
-- `<link rel="stylesheet">`
-- `<div style="">`
-- `<style>`
+`async`、`defer` 与 module script 的差异详见 `resourceLoading.md`。
 
-## Style
+## 2. Style
 
-样式计算
+浏览器根据 UA 样式、作者样式、继承、层叠和选择器匹配，为需要渲染的节点计算 computed style。百分比、`em/rem` 和部分依赖布局的信息不一定都在同一内部阶段最终解析。
 
-处理 CSSOM 树，得到计算后的样式(`Elements/Computed` tab)
+`getComputedStyle(element)` 返回解析后的只读样式视图。若前面存在未处理的样式修改，读取某些结果可能迫使浏览器先更新样式。
 
-- CSS 属性计算过程
-- 视觉格式化模型，盒模型，包含块
+## 3. Layout
 
-相关 API：`getComputedStyle()`
+布局根据盒模型、格式化上下文、包含块和内容计算盒子的尺寸与位置，形成浏览器内部的 layout/fragment 数据。
 
-## Layout
+DOM 与布局结构不是一一对应：
 
-布局阶段会依次遍历 DOM 树的每个节点，计算节点的几何消息，例如：通过**包含块**来计算 `auto`、`100%` 等相对尺寸，得到 Layout 树。
+- `display: none` 和 `<head>` 等非渲染内容没有布局盒。
+- `::before/::after` 可产生布局内容，但不是普通 DOM 子节点。
+- 文本会形成匿名 inline box，行内内容排版进 line box。
+- 块容器混合块级盒与行内内容时，规范可能生成匿名 block box 以满足格式化结构。
+- 一个 DOM 元素在分页、多列和行内换行时可能生成多个 fragment。
 
-DOM 树与 Layout 树不一定是一一对应的：
+读取 `offsetWidth`、`clientWidth`、`getBoundingClientRect()` 等几何信息时，浏览器必须返回当前结果；若样式或布局处于 dirty 状态，可能触发强制同步样式/布局。
 
-- `::before` 会被添加到 Layout 树中
-- `display: none` 的元素不会出现在 Layout 树中，`<head>` 等标签被浏览器默认样式表设置为隐藏内容
+## 4. Pre-paint、Paint 与 Layerization
 
-  ```css
-  /**
-   * blink/renderer/core/html/resources/html.css
-   */
-  base,
-  basefont,
-  datalist,
-  head,
-  link,
-  meta,
-  noembed,
-  noframes,
-  param,
-  rp,
-  script,
-  style,
-  template,
-  title {
-    display: none;
-  }
-  ```
-
-- 内容必须在行盒中（如果没有则会添加一个匿名行盒
-- 行盒和块盒不能相邻（如果相邻则会添加一个匿名行盒）
-
-  ```html
-  <div>
-    <p>a</p>
-    b
-    <p>c</p>
-  </div>
-  ```
-
-相关 API：`el.clientWidth`，`el.offsetWidth` 等
-
-## Layer
-
-浏览器 `Layers` 面板
-
-跟堆叠上下文有关的属性会影响到分层（`z-index`、`opacity`、`transform`）
-
-滚动条单独分层 -> 因为频繁变动。在优化页面时，可以使用 `will-change` 让浏览器在分层时考虑这个模块的变动。
-
-主线程会使用一套复杂的策略对整个布局树进行分层。分层的好处在于，将来某一个层改变后，仅会对该层进行后续处理，从而提升效率。
-
-滚动条、堆叠上下文、`transform`、`opacity` 等样式都会或多或少的影响分层结果，也可以通过 `will-change` 属性更大层度的影响浏览器分层决策（注意不要滥用）。
-
-## Paint
-
-为每一层生成绘制指令
-
-canvas就是使用这里的绘制指令
-
-渲染主线程的工作到此为止，剩余步骤交给其他线程完成
+布局之后，浏览器更新属性树、裁剪、滚动和绘制失效信息。Paint 生成按绘制顺序排列的 display items/display list，描述背景、边框、文字等如何绘制；它不是调用页面 Canvas API。
 
 ![渲染主线程](./assets/render-thread.excalidraw.png)
 
-## Tiling
+Layerization 决定哪些绘制内容进入独立 composited layer。堆叠上下文与合成层不是同一个概念：`z-index` 影响绘制和堆叠顺序，却不保证创建 GPU 合成层。动画、滚动、视频、3D transform 等因素都可能影响提升决策，浏览器可随时调整。
 
-分块会将每一层分为多个小的区域
+`will-change` 只是提前提示即将变化的属性，可能帮助浏览器准备优化，也可能增加纹理内存、合成和管理成本。应短期、针对性使用，并用 DevTools Layers/Performance 验证。
 
-使用合成线程（`Compositor`）执行分块逻辑，启动多个分块线程（`CompositorTileWorker`）
+## 5. Tiling、Raster 与 Composite
 
-在主线程 paint 执行之后，主线程会将每个图层的绘制信息交给合成线程，剩余工作交给合成线程完成。
+主线程把可供合成使用的数据 commit 给 compositor thread。较大的内容会按 tile 管理，靠近视口的 tile 通常优先光栅化。光栅工作可由 worker 和 GPU/Viz 进程协调完成，具体位置会随平台与浏览器实现变化。
 
-合成线程首先对每个图层进行分块，将其划分为更多的小区域，它会从线程池中拿去多个线程来完成分块工作
-
-## Raster
-
-将每个块变成位图，**优先处理靠近视口的块**
-
-此过程会用到 GPU 加速（交给 GPU 进程处理）
-
-## Draw
-
-合成线程计算出每个位图在屏幕上的位置，交给 GPU 进行最终呈现
+光栅化把 display list 变成像素纹理。compositor 根据 layer、tile、裁剪和 transform 生成 compositor frame；Chromium 的 Viz/display compositor 聚合页面和浏览器 UI 后提交显示。
 
 ![合成线程](./assets/composite-thread.excalidraw.png)
 
-为什么合成线程不自己执行画操作？
+合成线程可在主线程繁忙时处理部分滚动和 compositor-only animation，但前提是所需内容已光栅化且更新不依赖主线程样式、布局或绘制。
 
-> 合成线程与渲染主线程都是在渲染进程中，渲染进程在沙盒中（没有与操作系统进行直接连接），这是浏览器的安全机制。
+## 6. Reflow、Repaint 与 Composite
 
-合成线程拿到每个层、每个块的位图后，生成 quad (指引) 信息。指引会标识出每个位图应该画在屏幕的哪个位置，以及考虑旋转、缩放等变形。变形发生在合成线程，与主线程无关，这就是 `transform` 效率高的原因（在画的时候确定如何变形）。合成线程会把 quad 交个 GPU 进程，由 GPU 进程产生系统调用，提交给 GPU 硬件，完成最终的屏幕成像。
+| 变化 | 可能经过的主要阶段 | 示例 |
+| --- | --- | --- |
+| Layout/Reflow | style → layout → paint → raster → composite | 改变宽高、字体、文档流位置 |
+| Repaint | paint → raster → composite | 改背景色、阴影 |
+| Composite only | composite | 已合成层的 transform/opacity 动画 |
 
-## Interview
+表格表示常见情况，不是属性到流水线的永久映射。元素是否独立合成、失效范围和浏览器优化都会改变结果。
 
-- reflow：修改与几何消息相关的样式，修改的是 `CSSOM`，会重新执行 layout 之后的绘制流程，性能开销较大；
+浏览器会延迟并合并样式与布局更新。若代码在写入后立即读取布局，就会迫使它提前结算；循环中的读写交错形成 layout thrashing：
 
-  > reflow 本质是重新计算 layout 树；为了避免连续多次操作导致 layout 树反复计算，浏览器会合并这些操作。
-  > 当 JS 代码全部完成之后再进行统一计算。所以改动属性造成的 reflow 是异步完成的。
-  >
-  > 当 JS 获取布局属性时，可能造成无法获取最新的布局消息。为了解决这个问题，浏览器会在 JS 获取属性时立即 reflow
+```js
+// Bad: repeated write-read cycles
+for (const item of items) {
+  item.style.width = `${nextWidth}px`
+  console.log(item.offsetWidth)
+}
 
-- repaint：本质是根据分层信息计算绘制指令，改变了可见样式后，就需要重新计算，从而引发 repaint。由于元素的布局消息也属于可见样式，因此 reflow 一定会引起 repaint
+// Better: read first, then write in a batch
+const widths = items.map(item => item.offsetWidth)
+items.forEach((item, index) => {
+  item.style.width = `${widths[index] + 10}px`
+})
+```
 
-- 为什么 `transform` 效率高：`transform` 只影响 draw (合成线程)，不会阻塞渲染主线程
+## 7. transform 与 opacity 为什么通常更快
+
+若元素已进入独立合成层，改变 `transform` 或 `opacity` 通常能复用已有纹理，只更新合成参数，跳过主线程 layout 和 paint。首次显示、未提升为合成层、内容失效或滤镜等组合条件仍可能需要绘制，且过多图层会消耗内存。
+
+因此准确回答是“它们适合 compositor-only animation，通常成本较低”，而不是“transform 永远只走 GPU、与主线程无关”。
