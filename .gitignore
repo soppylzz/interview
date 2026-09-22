@@ -15,4 +15,5 @@ logs/
 .cache/
 .eslintcache
 
-jobs
+jobs/
+questions/
