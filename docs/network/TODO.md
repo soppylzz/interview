@@ -11,7 +11,7 @@
 
 ## 内容边界
 
-- 从输入 URL 到页面渲染的浏览器流程放在 `docs/browser/navigation.md`，本目录只展开其中的网络阶段。
+- 从输入 URL 到页面渲染的浏览器流程放在 `docs/browser/api/navigation.md`，本目录只展开其中的网络阶段。
 - HTTP 缓存、CORS、Cookie 和浏览器存储放在 `docs/browser`。
 - XSS、CSRF、CSP、中间人攻击等攻防内容放在独立的 Security 笔记；本目录只解释 HTTPS 建立安全连接的机制。
 - Web Vitals、资源加载优化等内容放在独立的 Perf 笔记；本目录保留连接复用、压缩等协议本身的行为。

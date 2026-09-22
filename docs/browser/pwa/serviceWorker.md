@@ -2,7 +2,7 @@
 
 Service Worker 注册后经历 installing、waiting、activating、activated。新 worker 通常等待旧 worker 不再控制页面才激活；页面首次注册时也不会立刻被当前加载中的 worker 控制。
 
-它可拦截作用域内受控页面的 fetch，并用 Cache API 实现 cache first、network first、stale-while-revalidate 等策略。Cache API 不自动遵循 HTTP freshness，需要应用自行版本化、过期和清理；网络请求内部仍可利用 HTTP cache。
+它可拦截作用域内受控页面的 fetch，并用 Cache API 实现 cache first、network first、stale-while-revalidate 等策略。Cache API 不自动遵循 HTTP freshness，需要应用自行版本化、过期和清理；网络请求内部仍可利用 HTTP cache。Cache Storage 的数据模型与示例见 [`cacheStorage.md`](./cacheStorage.md)。
 
 Service Worker 能代理敏感请求并长期影响页面，所以只允许安全上下文（localhost 是开发例外）。worker 可随时被浏览器终止，事件中的异步工作必须交给 `event.waitUntil()` 等生命周期机制，不能依赖内存常驻。
 

@@ -159,7 +159,7 @@
 - [ ] `transform`、`opacity` 动画性能较好的原因及适用边界
 - [ ] `will-change` 的作用和滥用代价
 - [ ] `contain` 与 `content-visibility` 如何缩小渲染影响范围
-- [ ] 与已有 `docs/browser/rendering.md` 联动学习，避免重复整理完整渲染流水线
+- [ ] 与已有 `docs/browser/core/rendering.md` 联动学习，避免重复整理完整渲染流水线
 
 ### 18. CSS containment 与容器查询 `containment.md`
 

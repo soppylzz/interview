@@ -4,8 +4,8 @@
 
 ## 内容边界
 
-- 浏览器解析、布局、绘制、光栅化和合成的完整流程放在 `docs/browser/rendering.md`。
-- HTTP 缓存放在 `docs/browser/cache.md`，HTTP 版本、连接复用、CDN 原理放在 `docs/network`。
+- 浏览器解析、布局、绘制、光栅化和合成的完整流程放在 `docs/browser/core/rendering.md`。
+- HTTP 缓存放在 `docs/browser/cache/httpCache.md`，HTTP 版本、连接复用、CDN 原理放在 `docs/network`。
 - BFC、字体、动画和 CSS 属性行为放在 `docs/css`；本目录只讨论它们对性能指标的影响。
 - Vite、Webpack、Tree Shaking、构建产物分析等工具原理放在 `docs/engineering`。
 

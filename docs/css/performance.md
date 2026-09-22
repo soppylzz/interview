@@ -63,4 +63,4 @@ elements.forEach((element, index) => {
 
 ### Reflow 一定触发 repaint 吗？
 
-布局结果变化通常要求更新绘制与合成，但浏览器会复用未受影响内容并进行增量处理。“整页全部重绘”不是必然。详细流程见 `docs/browser/rendering.md`，优化闭环见 `docs/perf`。
+布局结果变化通常要求更新绘制与合成，但浏览器会复用未受影响内容并进行增量处理。“整页全部重绘”不是必然。详细流程见 `docs/browser/core/rendering.md`，优化闭环见 `docs/perf`。

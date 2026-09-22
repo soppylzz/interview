@@ -17,7 +17,7 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["code", "algorithm"],
+  "include": ["code", "algorithm", "docs"],
   "ts-node": {
     "transpileOnly": true
   }

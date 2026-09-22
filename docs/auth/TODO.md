@@ -43,7 +43,7 @@
 ## 内容边界
 
 - 本目录讨论认证、授权协议和令牌机制；通用 XSS、CSRF、Cookie 攻防放在独立的 Security 笔记。
-- Cookie、`localStorage`、`sessionStorage` 的浏览器行为放在 `docs/browser/store.md`，本目录只讨论令牌或会话信息应该由谁持有。
+- Cookie、`localStorage`、`sessionStorage` 的浏览器行为放在 `docs/browser/storage/`，本目录只讨论令牌或会话信息应该由谁持有。
 - HTTPS、TLS 和证书链的建立过程放在 `docs/network`。
 - 密码哈希、MFA、Passkey/WebAuthn 等用户认证技术可以单独建立 Authentication 主题，不与 OAuth 授权流程混在一起。
 

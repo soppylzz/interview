@@ -36,7 +36,7 @@
 | HTTP 与 HTTPS | HTTPS 是运行在安全传输通道上的 HTTP |
 | HTTP/1.1 与 HTTP/2 | 文本消息与二进制分帧；多连接与单连接多路复用 |
 | HTTP/2 与 HTTP/3 | TCP 上多路复用与 QUIC 独立流 |
-| 强缓存与协商缓存 | 属于浏览器缓存策略，详见 `docs/browser/cache.md` |
+| 强缓存与协商缓存 | 属于浏览器缓存策略，详见 `docs/browser/cache/httpCache.md` |
 | HTTP keep-alive 与 TCP keepalive | 前者复用 HTTP 连接，后者探测空闲 TCP 连接状态 |
 
 ## 复习目标
